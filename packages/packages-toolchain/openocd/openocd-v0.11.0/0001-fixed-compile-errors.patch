@@ -1,0 +1,77 @@
+From 774da7cfc924dddb2838d673fcaa6fcb8512d39a Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 26 Dec 2021 06:04:30 +0100
+Subject: [PATCH] fixed compile errors
+
+---
+ src/flash/nor/numicro.c | 12 +++++++++---
+ src/target/arm920t.c    |  6 +++---
+ 2 files changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/src/flash/nor/numicro.c b/src/flash/nor/numicro.c
+index 7609fa81c..bb725b97c 100644
+--- a/src/flash/nor/numicro.c
++++ b/src/flash/nor/numicro.c
+@@ -1242,8 +1242,10 @@ static uint32_t numicro_fmc_cmd(struct target *target, uint32_t cmd, uint32_t ad
+ 	for (;;) {
+ 		retval = target_read_u32(target, NUMICRO_FLASH_ISPTRG, &status);
+ 		if (retval != ERROR_OK)
+-			return retval;
++        {
+ 			LOG_DEBUG("status: 0x%" PRIx32 "", status);
++			return retval;
++        }
+ 		if ((status & (ISPTRG_ISPGO)) == 0)
+ 			break;
+ 		if (timeout-- <= 0) {
+@@ -1511,8 +1513,10 @@ static int numicro_erase(struct flash_bank *bank, unsigned int first,
+ 		for (;;) {
+ 			retval = target_read_u32(target, NUMICRO_FLASH_ISPTRG, &status);
+ 			if (retval != ERROR_OK)
+-				return retval;
++            {
+ 				LOG_DEBUG("status: 0x%" PRIx32 "", status);
++				return retval;
++            }
+ 			if (status == 0)
+ 				break;
+ 			if (timeout-- <= 0) {
+@@ -1600,8 +1604,10 @@ static int numicro_write(struct flash_bank *bank, const uint8_t *buffer,
+ 			for (;;) {
+ 				retval = target_read_u32(target, NUMICRO_FLASH_ISPTRG, &status);
+ 				if (retval != ERROR_OK)
+-					return retval;
++                {
+ 					LOG_DEBUG("status: 0x%" PRIx32 "", status);
++					return retval;
++                }
+ 				if (status == 0)
+ 					break;
+ 				if (timeout-- <= 0) {
+diff --git a/src/target/arm920t.c b/src/target/arm920t.c
+index c96975a77..6809492d7 100644
+--- a/src/target/arm920t.c
++++ b/src/target/arm920t.c
+@@ -245,8 +245,8 @@ static int arm920t_read_cp15_interpreted(struct target *target,
+ 	uint32_t cp15_opcode, uint32_t address, uint32_t *value)
+ {
+ 	struct arm *arm = target_to_arm(target);
+-	uint32_t *regs_p[1];
+-	uint32_t regs[2];
++	uint32_t *regs_p[16];
++	uint32_t regs[16];
+ 	uint32_t cp15c15 = 0x0;
+ 	struct reg *r = arm->core_cache->reg_list;
+ 
+@@ -295,7 +295,7 @@ int arm920t_write_cp15_interpreted(struct target *target,
+ {
+ 	uint32_t cp15c15 = 0x0;
+ 	struct arm *arm = target_to_arm(target);
+-	uint32_t regs[2];
++	uint32_t regs[16];
+ 	struct reg *r = arm->core_cache->reg_list;
+ 
+ 	/* load value, address into R0, R1 */
+-- 
+2.34.1
+

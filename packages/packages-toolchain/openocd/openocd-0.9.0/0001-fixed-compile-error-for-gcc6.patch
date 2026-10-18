@@ -1,0 +1,30 @@
+From 1636fb695bfa1ed227503215704e0980dd113cb7 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sat, 10 Sep 2016 22:31:31 +0200
+Subject: [PATCH] fixed compile error for gcc6
+
+---
+ src/target/arm7_9_common.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/target/arm7_9_common.c b/src/target/arm7_9_common.c
+index 617ee78..144bbb3 100644
+--- a/src/target/arm7_9_common.c
++++ b/src/target/arm7_9_common.c
+@@ -351,11 +351,12 @@ static int arm7_9_unset_breakpoint(struct target *target, struct breakpoint *bre
+ 				return retval;
+ 			current_instr = target_buffer_get_u16(target, (uint8_t *)&current_instr);
+ 			if (current_instr == arm7_9->thumb_bkpt)
++			{
+ 				retval = target_write_memory(target,
+ 						breakpoint->address, 2, 1, breakpoint->orig_instr);
+ 				if (retval != ERROR_OK)
+ 					return retval;
+-
++			}
+ 		}
+ 
+ 		if (--arm7_9->sw_breakpoint_count == 0) {
+-- 
+2.9.3
+

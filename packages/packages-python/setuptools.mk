@@ -1,0 +1,45 @@
+#------------------------------------------------------------------------------
+#
+#  \brief   Setuptools recipe for tcbuilder
+#
+#  \author  Maximilian Seesslen <src@seesslen.net>
+#  \date    <20181217> file created
+#
+#------------------------------------------------------------------------------
+
+
+python3-setuptools-host.VERSION			= 84.0.0
+python3-setuptools-host.ARCHIVE_FILE	= setuptools-$(python3-setuptools-host.VERSION).tar.gz
+# python3-setuptools-host.ARCHIVE_URL		= https://files.pythonhosted.org/packages/fe/db/68d856066c59bd9f05e827c3cf80164d870b8b6af37dc5ad6c87a71d20f2/setuptools-67.0.0.tar.gz
+ python3-setuptools-host.ARCHIVE_URL		= https://files.pythonhosted.org/packages/6d/44/f5da03a8ef95d369145c5bb53050e7877c9f3d312e128605fd9504829143/setuptools-84.0.0.tar.gz
+python3-setuptools-host.SOURCE_PATH		= setuptools-$(python3-setuptools-host.VERSION)
+python3-setuptools-host.PYTHONBIN		= $(SYSROOT_HOST)$(HOST_PREFIX)/bin/python3
+python3-setuptools-host.DIST_PACKAGES	= $(SYSROOT_HOST)$(HOST_PREFIX)/lib/python3/dist-packages
+
+python3-setuptools-host.sourcebase: python3-setuptools-host.archive_sourcebase
+
+%.python3-setuptools-host.issue: python3-setuptools-host.sourcebase python3-host.issue
+	$(call lHint,Building $*)
+	@cd $(SOURCE_PATH)/$($*.SOURCE_PATH); \
+			$(do_export) LANG="" export \
+			$(REDIRECTION_STATEMENT) $(LOG_PATH)/$*_export.log
+	@cd $(SOURCE_PATH)/$($*.SOURCE_PATH); \
+			$(do_export) \
+			$($*.PYTHONBIN) setup.py clean \
+			$(REDIRECTION_STATEMENT) $(LOG_PATH)/$*_customclean.log
+	@cd $(SOURCE_PATH)/$($*.SOURCE_PATH); \
+			$(do_export) LANG="" $($*.PYTHONBIN) setup.py build \
+			$(REDIRECTION_STATEMENT) $(LOG_PATH)/$*_custombuild.log
+	@mkdir -p $(python3-setuptools-host.DIST_PACKAGES)
+	@cd $(SOURCE_PATH)/$($*.SOURCE_PATH); \
+			$($*.PYTHONBIN) setup.py install \
+			$(REDIRECTION_STATEMENT) $(LOG_PATH)/$*_install.log
+	$(call lHint,Done)
+	$(done)
+
+python3-setuptools-host.issue: python3-setuptools-host.python3-setuptools-host.issue
+	$(call lHint,Done)
+	$(done)
+
+
+#---fin------------------------------------------------------------------------

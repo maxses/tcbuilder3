@@ -1,0 +1,27 @@
+From a7ed94f35ccaaa25758d77184d58fa7c0f09634a Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <mase@wost>
+Date: Sat, 28 Jun 2014 19:56:47 +0200
+Subject: [PATCH] removed bfd_set_section_x makros which do not compile with
+ gcc 4.9.0
+
+---
+ bfd/bfd-in2.h | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/bfd/bfd-in2.h b/bfd/bfd-in2.h
+index 756af87..f7e80a3 100644
+--- a/bfd/bfd-in2.h
++++ b/bfd/bfd-in2.h
+@@ -299,9 +299,6 @@ typedef struct bfd_section *sec_ptr;
+ 
+ #define bfd_is_com_section(ptr) (((ptr)->flags & SEC_IS_COMMON) != 0)
+ 
+-#define bfd_set_section_vma(bfd, ptr, val) (((ptr)->vma = (ptr)->lma = (val)), ((ptr)->user_set_vma = TRUE), TRUE)
+-#define bfd_set_section_alignment(bfd, ptr, val) (((ptr)->alignment_power = (val)),TRUE)
+-#define bfd_set_section_userdata(bfd, ptr, val) (((ptr)->userdata = (val)),TRUE)
+ /* Find the address one past the end of SEC.  */
+ #define bfd_get_section_limit(bfd, sec) \
+   (((bfd)->direction != write_direction && (sec)->rawsize != 0	\
+-- 
+2.0.0
+

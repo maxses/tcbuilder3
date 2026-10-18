@@ -1,0 +1,22 @@
+From 9c7e31584ea12ac833f934dfd2719ca0f79d2f88 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Thu, 15 Oct 2026 10:37:20 +0200
+Subject: [PATCH] libjaylink: Use mirror url
+
+---
+ .gitmodules | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/.gitmodules b/.gitmodules
+index f2da17ed7..4a0ac5548 100644
+--- a/.gitmodules
++++ b/.gitmodules
+@@ -6,4 +6,4 @@
+ 	url = https://github.com/msteveb/jimtcl.git
+ [submodule "src/jtag/drivers/libjaylink"]
+ 	path = src/jtag/drivers/libjaylink
+-	url = https://gitlab.zapb.de/libjaylink/libjaylink.git
++	url = https://repo.or.cz/libjaylink.git
+-- 
+2.53.0
+

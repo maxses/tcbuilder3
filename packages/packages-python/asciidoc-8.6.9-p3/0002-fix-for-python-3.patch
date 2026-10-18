@@ -1,0 +1,25 @@
+From e2396310f85984f59883f7fc9ca2272e85b8026f Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 12:13:06 +0200
+Subject: [PATCH] fix for python 3
+
+---
+ a2x.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/a2x.py b/a2x.py
+index 2d6191d..45ef7e7 100755
+--- a/a2x.py
++++ b/a2x.py
+@@ -99,7 +99,7 @@ class AttrDict(dict):
+     def __getattr__(self, key):
+         try:
+             return self[key]
+-        except KeyError, k:
++        except ( KeyError, k ):
+             if self.has_key('_default'):
+                 return self['_default']
+             else:
+-- 
+2.14.1
+

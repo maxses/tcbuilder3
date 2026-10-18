@@ -1,0 +1,25 @@
+From ffcf36838d6de7c5c2c3d235ece21e94a84d76cc Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 16:21:27 +0200
+Subject: [PATCH] use python2
+
+---
+ Makefile.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index f522d45..85b67a1 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -107,7 +107,7 @@ $(DATATARGETS): % : %dir
+ 	$(INSTALL_DATA) $($@) $(DESTDIR)/$($<)/
+ 
+ $(manp): %.1 : %.1.txt
+-	python a2x.py -f manpage $<
++	python2 a2x.py -f manpage $<
+ 
+ docs:
+ 	$(INSTALL) -d $(DESTDIR)/$(docdir)
+-- 
+2.14.1
+

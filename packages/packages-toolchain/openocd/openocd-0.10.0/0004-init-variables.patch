@@ -1,0 +1,107 @@
+From cffc625bb6ae79c656303ae8453356c3c5baa8a7 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sat, 23 Sep 2017 19:29:02 +0200
+Subject: [PATCH] init variables
+
+---
+ jimtcl/jim-format.c              | 2 +-
+ src/flash/nor/jtagspi.c          | 5 +++--
+ src/target/etm.c                 | 2 +-
+ src/target/hla_target.c          | 2 +-
+ src/target/openrisc/jsp_server.c | 4 ++--
+ 5 files changed, 8 insertions(+), 7 deletions(-)
+
+diff --git a/jimtcl/jim-format.c b/jimtcl/jim-format.c
+index dc6f8ae..7bc4ad8 100644
+--- a/jimtcl/jim-format.c
++++ b/jimtcl/jim-format.c
+@@ -355,7 +355,7 @@ Jim_Obj *Jim_FormatString(Jim_Interp *interp, Jim_Obj *fmtObjPtr, int objc, Jim_
+         case 'o':
+         case 'x':
+         case 'X': {
+-            jim_wide w;
++            jim_wide w=0;
+             double d;
+             int length;
+ 
+diff --git a/src/flash/nor/jtagspi.c b/src/flash/nor/jtagspi.c
+index a995fc7..82759c8 100644
+--- a/src/flash/nor/jtagspi.c
++++ b/src/flash/nor/jtagspi.c
+@@ -23,6 +23,7 @@
+ #include <jtag/jtag.h>
+ #include <flash/nor/spi.h>
+ #include <helper/time_support.h>
++#include <helper/binarybuffer.h>
+ 
+ #define JTAGSPI_MAX_TIMEOUT 3000
+ 
+@@ -85,7 +86,7 @@ static int jtagspi_cmd(struct flash_bank *bank, uint8_t cmd,
+ {
+ 	struct jtagspi_flash_bank *info = bank->driver_priv;
+ 	struct scan_field fields[3];
+-	uint8_t cmd_buf[4];
++	uint8_t cmd_buf[4]={0,0,0,0};
+ 	uint8_t *data_buf;
+ 	int is_read, lenb, n;
+ 
+@@ -201,7 +202,7 @@ static int jtagspi_probe(struct flash_bank *bank)
+ 
+ static void jtagspi_read_status(struct flash_bank *bank, uint32_t *status)
+ {
+-	uint8_t buf;
++	uint8_t buf=0;
+ 	jtagspi_cmd(bank, SPIFLASH_READ_STATUS, NULL, &buf, -8);
+ 	*status = buf;
+ 	/* LOG_DEBUG("status=0x%08" PRIx32, *status); */
+diff --git a/src/target/etm.c b/src/target/etm.c
+index 6a00c23..64d1711 100644
+--- a/src/target/etm.c
++++ b/src/target/etm.c
+@@ -1818,7 +1818,7 @@ COMMAND_HANDLER(handle_etm_load_command)
+ 	}
+ 
+ 	for (i = 0; i < etm_ctx->trace_depth; i++) {
+-		uint32_t pipestat, packet, flags;
++		uint32_t pipestat = 0, packet = 0, flags = 0;
+ 		fileio_read_u32(file, &pipestat);
+ 		fileio_read_u32(file, &packet);
+ 		fileio_read_u32(file, &flags);
+diff --git a/src/target/hla_target.c b/src/target/hla_target.c
+index feeb11f..a337c51 100644
+--- a/src/target/hla_target.c
++++ b/src/target/hla_target.c
+@@ -266,7 +266,7 @@ static int hl_target_request_data(struct target *target,
+ 	uint32_t size, uint8_t *buffer)
+ {
+ 	struct hl_interface_s *hl_if = target_to_adapter(target);
+-	uint8_t data;
++	uint8_t data = 0;
+ 	uint8_t ctrl;
+ 	uint32_t i;
+ 
+diff --git a/src/target/openrisc/jsp_server.c b/src/target/openrisc/jsp_server.c
+index e581fb8..3760f5b 100644
+--- a/src/target/openrisc/jsp_server.c
++++ b/src/target/openrisc/jsp_server.c
+@@ -63,7 +63,7 @@ int jsp_poll_read(void *priv)
+ 	unsigned char out_buffer[10];
+ 	unsigned char in_buffer[10];
+ 	int out_len = 0;
+-	int in_len;
++	int in_len = 0;
+ 
+ 	if (!jsp_service->connection)
+ 		return ERROR_FAIL;
+@@ -134,7 +134,7 @@ static int jsp_input(struct connection *connection)
+ 					t_con->state = TELNET_STATE_IAC;
+ 				else {
+ 					int out_len = 1;
+-					int in_len;
++					int in_len = 0;
+ 					unsigned char in_buffer[10];
+ 					or1k_adv_jtag_jsp_xfer(jsp_service->jtag_info,
+ 							       &out_len, buf_p, &in_len,
+-- 
+2.14.1
+

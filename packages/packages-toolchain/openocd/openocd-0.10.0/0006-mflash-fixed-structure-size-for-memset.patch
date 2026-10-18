@@ -1,0 +1,25 @@
+From d416aa54908d8280a8953e06729af5dbe8c71bfe Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Thu, 7 Nov 2019 19:43:48 +0100
+Subject: [PATCH] mflash: fixed structure size for memset
+
+---
+ src/flash/mflash.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/flash/mflash.c b/src/flash/mflash.c
+index 5b50e43..5a8dcb3 100644
+--- a/src/flash/mflash.c
++++ b/src/flash/mflash.c
+@@ -1159,7 +1159,7 @@ static void mg_gen_ataid(mg_io_type_drv_info *pSegIdDrvInfo)
+ 	memset(pSegIdDrvInfo->vendor_uniq_bytes, 0x00, 62);
+ 	/* CFA power mode 1 support in maximum 200mA */
+ 	pSegIdDrvInfo->cfa_pwr_mode                     = 0x0100;
+-	memset(pSegIdDrvInfo->reserved7, 0x00, 190);
++	memset(pSegIdDrvInfo->reserved7, 0x00, sizeof(pSegIdDrvInfo->reserved7) );
+ }
+ 
+ static int mg_storage_config(void)
+-- 
+2.24.0.rc1
+

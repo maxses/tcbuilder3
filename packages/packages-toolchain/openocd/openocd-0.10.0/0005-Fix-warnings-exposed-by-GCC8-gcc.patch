@@ -1,0 +1,45 @@
+From deb57f14a7773a6df35fa4b89843fe98c385c691 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Tue, 18 Sep 2018 13:19:28 +0200
+Subject: [PATCH] Fix warnings exposed by GCC8 gcc
+
+(GCC) 8.1.0 generates new warnings and thus fails the build.
+The ARM disassembler warnings actually exposed a bug in SMALW, SMULW and SMUL instructions decoding.
+---
+ src/target/arm_disassembler.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/target/arm_disassembler.c b/src/target/arm_disassembler.c
+index 4c9f126..8e50021 100644
+--- a/src/target/arm_disassembler.c
++++ b/src/target/arm_disassembler.c
+@@ -1496,7 +1496,7 @@ static int evaluate_misc_instr(uint32_t opcode,
+ 		}
+ 
+ 		/* SMLAW < y> */
+-		if (((opcode & 0x00600000) == 0x00100000) && (x == 0)) {
++                if (((opcode & 0x00600000) == 0x00200000) && (x == 0)) {
+ 			uint8_t Rd, Rm, Rs, Rn;
+ 			instruction->type = ARM_SMLAWy;
+ 			Rd = (opcode & 0xf0000) >> 16;
+@@ -1518,7 +1518,7 @@ static int evaluate_misc_instr(uint32_t opcode,
+ 		}
+ 
+ 		/* SMUL < x><y> */
+-		if ((opcode & 0x00600000) == 0x00300000) {
++                if ((opcode & 0x00600000) == 0x00600000) {
+ 			uint8_t Rd, Rm, Rs;
+ 			instruction->type = ARM_SMULxy;
+ 			Rd = (opcode & 0xf0000) >> 16;
+@@ -1539,7 +1539,7 @@ static int evaluate_misc_instr(uint32_t opcode,
+ 		}
+ 
+ 		/* SMULW < y> */
+-		if (((opcode & 0x00600000) == 0x00100000) && (x == 1)) {
++                if (((opcode & 0x00600000) == 0x00200000) && (x == 1)) {
+ 			uint8_t Rd, Rm, Rs;
+ 			instruction->type = ARM_SMULWy;
+ 			Rd = (opcode & 0xf0000) >> 16;
+-- 
+2.18.0
+

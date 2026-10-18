@@ -1,0 +1,25 @@
+From 5a3f3d80b4ed84b80fe1bca5e95049a819fd1440 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sat, 6 Feb 2021 15:44:28 +0100
+Subject: [PATCH] fixed compile error
+
+---
+ ld/ldlang.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/ld/ldlang.h b/ld/ldlang.h
+index 718bcee8990..80c96a826fd 100644
+--- a/ld/ldlang.h
++++ b/ld/ldlang.h
+@@ -21,6 +21,8 @@
+ #ifndef LDLANG_H
+ #define LDLANG_H
+ 
++#include <ctf-api.h>
++
+ #define DEFAULT_MEMORY_REGION   "*default*"
+ 
+ #define SECTION_NAME_MAP_LENGTH (16)
+-- 
+2.30.0
+

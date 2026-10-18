@@ -1,0 +1,39 @@
+From ee5602a543c445b6412a5ab10a62b2668d102e6b Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 12:10:36 +0200
+Subject: [PATCH] fix for python 3
+
+---
+ a2x.py                | 2 +-
+ tests/testasciidoc.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/a2x.py b/a2x.py
+index c30e15b..2d6191d 100755
+--- a/a2x.py
++++ b/a2x.py
+@@ -73,7 +73,7 @@ def warning(msg):
+     errmsg('WARNING: %s' % msg)
+ 
+ def infomsg(msg):
+-    print '%s: %s' % (PROG,msg)
++    print ( '%s: %s' % (PROG,msg) )
+ 
+ def die(msg, exit_code=1):
+     errmsg('ERROR: %s' % msg)
+diff --git a/tests/testasciidoc.py b/tests/testasciidoc.py
+index 92ba419..6e5bd30 100755
+--- a/tests/testasciidoc.py
++++ b/tests/testasciidoc.py
+@@ -331,7 +331,7 @@ class AsciiDocTests(object):
+         Lists tests to stdout.
+         """
+         for test in self.tests:
+-            print '%d: %s%s' % (test.number, iif(test.disabled,'!'), test.title)
++            print ( '%d: %s%s' % (test.number, iif(test.disabled,'!'), test.title) )
+ 
+ 
+ class Lines(list):
+-- 
+2.14.1
+

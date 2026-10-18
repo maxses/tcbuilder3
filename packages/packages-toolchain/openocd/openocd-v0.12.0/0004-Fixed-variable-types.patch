@@ -1,0 +1,39 @@
+From 80c2cdc23d7b838e41f14bc180c770a3583e31d9 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Tue, 13 Oct 2026 13:12:14 +0200
+Subject: [PATCH] Fixed variable types
+
+---
+ src/helper/log.c     | 2 +-
+ src/helper/options.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/helper/log.c b/src/helper/log.c
+index e6a70a3f5..a43480584 100644
+--- a/src/helper/log.c
++++ b/src/helper/log.c
+@@ -80,7 +80,7 @@ static void log_puts(enum log_levels level,
+ 	const char *function,
+ 	const char *string)
+ {
+-	char *f;
++	const char *f;
+ 
+ 	if (!log_output) {
+ 		/* log_init() not called yet; print on stderr */
+diff --git a/src/helper/options.c b/src/helper/options.c
+index 327c418d0..de555ab23 100644
+--- a/src/helper/options.c
++++ b/src/helper/options.c
+@@ -151,7 +151,7 @@ static char *find_relative_path(const char *from, const char *to)
+ 	while (from[0] != '\0') {
+ 		if (from[0] != '/')
+ 			i++;
+-		char *next = strchr(from, '/');
++		const char *next = strchr(from, '/');
+ 		if (!next)
+ 			break;
+ 		from = next + 1;
+-- 
+2.53.0
+

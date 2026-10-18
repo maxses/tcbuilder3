@@ -1,0 +1,22 @@
+[binaries]
+c = '@SYSROOT_HOST@/@CROSSTOOLS_BIN_PREFIX@/@CROSS_COMPILE@gcc'
+cpp = '@SYSROOT_HOST@/@CROSSTOOLS_BIN_PREFIX@/@CROSS_COMPILE@g++'
+ar = '@SYSROOT_HOST@/@CROSSTOOLS_BIN_PREFIX@/@CROSS_COMPILE@ar'
+strip = '@SYSROOT_HOST@/@CROSSTOOLS_BIN_PREFIX@/@CROSS_COMPILE@strip'
+pkgconfig = '@TARGET_PKG_CONFIG_RUNTIME@'
+
+
+[properties]
+root = '@SYSROOT_HOST@/@CROSSTOOLS_BIN_PREFIX@'
+
+has_function_printf = true
+has_function_hfkerhisadf = false
+
+[host_machine]
+system = 'linux-@TARGET_CPU@'
+cpu_family = '@TARGET_CPU@'
+cpu = '@MICROARCHITECTURE@' # Not sure if correct.
+endian = 'little'
+
+
+#---fin-----------------------------------------------------------------------

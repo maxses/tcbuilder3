@@ -1,0 +1,25 @@
+From 7d47754f58479a020d369a646d28cc1fec1a9ed0 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 13:18:50 +0200
+Subject: [PATCH] fix for python 3
+
+---
+ asciidoc.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/asciidoc.py b/asciidoc.py
+index 7c47588..9e5b22c 100755
+--- a/asciidoc.py
++++ b/asciidoc.py
+@@ -177,7 +177,7 @@ class Message:
+         self.prev_msg = ''
+ 
+     def stdout(self,msg):
+-        print msg
++        print ( msg )
+ 
+     def stderr(self,msg=''):
+         if msg == self.prev_msg:  # Suppress repeated messages.
+-- 
+2.14.1
+

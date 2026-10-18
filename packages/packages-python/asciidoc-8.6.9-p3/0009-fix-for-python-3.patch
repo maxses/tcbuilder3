@@ -1,0 +1,25 @@
+From 68caac3f62081b0ad00da93f186827c4e7c9a962 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 13:38:06 +0200
+Subject: [PATCH] fix for python 3
+
+---
+ asciidoc.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/asciidoc.py b/asciidoc.py
+index ea5cf6c..5ed49b0 100755
+--- a/asciidoc.py
++++ b/asciidoc.py
+@@ -632,7 +632,7 @@ def subs_tag(tag,dict={}):
+     elif len(result) == 2:
+         return result
+     else:
+-        raise EAsciiDoc,'malformed tag: %s' % tag
++        raise ( EAsciiDoc,'malformed tag: %s' % tag )
+ 
+ def parse_entry(entry, dict=None, unquote=False, unique_values=False,
+         allow_name_only=False, escape_delimiter=True):
+-- 
+2.14.1
+

@@ -1,0 +1,25 @@
+From c900f708e32db7db8e9e18c39efe6b1cc0b053bc Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 13:20:58 +0200
+Subject: [PATCH] fix for python 3
+
+---
+ asciidoc.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/asciidoc.py b/asciidoc.py
+index 9e5b22c..a3ce3da 100755
+--- a/asciidoc.py
++++ b/asciidoc.py
+@@ -217,7 +217,7 @@ class Message:
+         all fatal errors finishing with a non-zero exit code.
+         """
+         if halt:
+-            raise EAsciiDoc, self.format(msg,linenos=False,cursor=cursor)
++            raise ( EAsciiDoc, self.format(msg,linenos=False,cursor=cursor) )
+         else:
+             msg = self.format(msg,'ERROR: ',cursor=cursor)
+             self.stderr(msg)
+-- 
+2.14.1
+

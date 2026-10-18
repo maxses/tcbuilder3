@@ -1,0 +1,80 @@
+From 052b5715b08f193302f7f9c7f4e5b0e8b445c721 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sat, 23 Sep 2017 18:54:21 +0200
+Subject: [PATCH] init variables
+
+---
+ src/jtag/hla/hla_tcl.c | 2 +-
+ src/jtag/tcl.c         | 8 ++++----
+ src/svf/svf.c          | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/jtag/hla/hla_tcl.c b/src/jtag/hla/hla_tcl.c
+index 9378427..fb6d8c4 100644
+--- a/src/jtag/hla/hla_tcl.c
++++ b/src/jtag/hla/hla_tcl.c
+@@ -99,7 +99,7 @@ static int jim_hl_newtap_cmd(Jim_GetOptInfo *goi)
+ 		return JIM_ERR;
+ 	}
+ 
+-	const char *tmp;
++	const char *tmp=NULL;
+ 	Jim_GetOpt_String(goi, &tmp, NULL);
+ 	pTap->chip = strdup(tmp);
+ 
+diff --git a/src/jtag/tcl.c b/src/jtag/tcl.c
+index bc6bbf2..6341309 100644
+--- a/src/jtag/tcl.c
++++ b/src/jtag/tcl.c
+@@ -112,7 +112,7 @@ static int Jim_Command_drscan(Jim_Interp *interp, int argc, Jim_Obj *const *args
+ 	/* validate arguments as numbers */
+ 	e = JIM_OK;
+ 	for (i = 2; i < argc; i += 2) {
+-		long bits;
++		long bits=0;
+ 		const char *cp;
+ 
+ 		e = Jim_GetLong(interp, args[i], &bits);
+@@ -173,7 +173,7 @@ static int Jim_Command_drscan(Jim_Interp *interp, int argc, Jim_Obj *const *args
+ 	}
+ 	fields = malloc(sizeof(struct scan_field) * num_fields);
+ 	for (i = 2; i < argc; i += 2) {
+-		long bits;
++		long bits=0;
+ 		int len;
+ 		const char *str;
+ 
+@@ -199,7 +199,7 @@ static int Jim_Command_drscan(Jim_Interp *interp, int argc, Jim_Obj *const *args
+ 	field_count = 0;
+ 	Jim_Obj *list = Jim_NewListObj(interp, NULL, 0);
+ 	for (i = 2; i < argc; i += 2) {
+-		long bits;
++		long bits=0;
+ 		char *str;
+ 
+ 		Jim_GetLong(interp, args[i], &bits);
+@@ -532,7 +532,7 @@ static int jim_newtap_cmd(Jim_GetOptInfo *goi)
+ 		return JIM_ERR;
+ 	}
+ 
+-	const char *tmp;
++	const char *tmp=NULL;
+ 	Jim_GetOpt_String(goi, &tmp, NULL);
+ 	pTap->chip = strdup(tmp);
+ 
+diff --git a/src/svf/svf.c b/src/svf/svf.c
+index 8877250..ad4eead 100644
+--- a/src/svf/svf.c
++++ b/src/svf/svf.c
+@@ -915,7 +915,7 @@ static int svf_execute_tap(void)
+ 
+ static int svf_run_command(struct command_context *cmd_ctx, char *cmd_str)
+ {
+-	char *argus[256], command;
++	char *argus[256]={NULL}, command;
+ 	int num_of_argu = 0, i;
+ 
+ 	/* tmp variable */
+-- 
+2.14.1
+

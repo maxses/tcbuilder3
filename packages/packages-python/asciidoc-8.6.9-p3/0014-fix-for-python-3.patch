@@ -1,0 +1,25 @@
+From 2bc6521eada2e9bda8759f10fc271f881201d1e6 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 14:01:48 +0200
+Subject: [PATCH] fix for python 3
+
+---
+ asciidoc.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/asciidoc.py b/asciidoc.py
+index 888ea30..fcaff49 100755
+--- a/asciidoc.py
++++ b/asciidoc.py
+@@ -5682,7 +5682,7 @@ def extract_zip(zip_file, destdir):
+                 if not os.path.isdir(directory):
+                     os.makedirs(directory)
+                 outfile = os.path.join(directory, outfile)
+-                perms = (zi.external_attr >> 16) & 0777
++                perms = (zi.external_attr >> 16) & 0o777
+                 message.verbose('extracting: %s' % outfile)
+                 flags = os.O_CREAT | os.O_WRONLY
+                 if sys.platform == 'win32':
+-- 
+2.14.1
+

@@ -1,0 +1,33 @@
+From bfb716eb3f35d2cb1547961b01dc61fafd4e4adc Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 16:06:26 +0200
+Subject: [PATCH] use python2
+
+---
+ a2x.py      | 2 +-
+ asciidoc.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/a2x.py b/a2x.py
+index 35582f1..a2f4b2c 100755
+--- a/a2x.py
++++ b/a2x.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ '''
+ a2x - A toolchain manager for AsciiDoc (converts Asciidoc text files to other
+       file formats)
+diff --git a/asciidoc.py b/asciidoc.py
+index d3ff57f..d472a2b 100755
+--- a/asciidoc.py
++++ b/asciidoc.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python2
+ """
+ asciidoc - converts an AsciiDoc text file to HTML or DocBook
+ 
+-- 
+2.14.1
+

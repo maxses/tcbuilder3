@@ -1,0 +1,210 @@
+From 6a11f0389e0fc27f8e6706a28965723d8014c653 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Fri, 1 Sep 2017 21:29:26 +0200
+Subject: [PATCH] fixes for gcc 7 compiler errors
+
+---
+ src/flash/mflash.c            |  4 ++--
+ src/flash/nand/mx3.c          |  1 +
+ src/flash/nor/xmc4xxx.c       |  2 +-
+ src/helper/command.c          |  1 +
+ src/jtag/drivers/ftdi.c       |  1 +
+ src/svf/svf.c                 |  2 ++
+ src/target/arm_adi_v5.c       | 11 ++++++++++-
+ src/target/arm_disassembler.c |  1 +
+ src/target/armv7a.c           |  1 +
+ src/target/nds32_cmd.c        |  2 +-
+ src/target/target.c           |  1 +
+ 11 files changed, 22 insertions(+), 5 deletions(-)
+
+diff --git a/src/flash/mflash.c b/src/flash/mflash.c
+index b699955..5b50e43 100644
+--- a/src/flash/mflash.c
++++ b/src/flash/mflash.c
+@@ -259,11 +259,11 @@ static int mg_dsk_wait(mg_io_type_wait wait_local, uint32_t time_var)
+ 				case mg_io_wait_rdy:
+ 					if (status & mg_io_rbit_status_ready)
+ 						return ERROR_OK;
+-
++					// fallthrough
+ 				case mg_io_wait_drq:
+ 					if (status & mg_io_rbit_status_data_req)
+ 						return ERROR_OK;
+-
++					// fallthrough
+ 				default:
+ 					break;
+ 			}
+diff --git a/src/flash/nand/mx3.c b/src/flash/nand/mx3.c
+index b61e475..642b930 100644
+--- a/src/flash/nand/mx3.c
++++ b/src/flash/nand/mx3.c
+@@ -281,6 +281,7 @@ static int imx31_command(struct nand_device *nand, uint8_t command)
+ 			 * offset == one half of page size
+ 			 */
+ 			in_sram_address = MX3_NF_MAIN_BUFFER0 + (nand->page_size >> 1);
++                        // fallthrough
+ 		default:
+ 			in_sram_address = MX3_NF_MAIN_BUFFER0;
+ 	}
+diff --git a/src/flash/nor/xmc4xxx.c b/src/flash/nor/xmc4xxx.c
+index 02df46a..9b83538 100644
+--- a/src/flash/nor/xmc4xxx.c
++++ b/src/flash/nor/xmc4xxx.c
+@@ -931,7 +931,7 @@ static int xmc4xxx_get_info_command(struct flash_bank *bank, char *buf, int buf_
+ 
+ 	/* If OTP Write protection is enabled (User 2), list each
+ 	 * sector that has it enabled */
+-	char otp_str[8];
++	char otp_str[16];
+ 	if (otp_enabled) {
+ 		strcat(prot_str, "\nOTP Protection is enabled for sectors:\n");
+ 		for (int i = 0; i < bank->num_sectors; i++) {
+diff --git a/src/helper/command.c b/src/helper/command.c
+index fc4aac7..55b9b08 100644
+--- a/src/helper/command.c
++++ b/src/helper/command.c
+@@ -1456,6 +1456,7 @@ COMMAND_HELPER(handle_command_parse_bool, bool *out, const char *label)
+ 			}
+ 			/* fall through */
+ 		}
++		// fallthrough
+ 		case 0:
+ 			LOG_INFO("%s is %s", label, *out ? "enabled" : "disabled");
+ 			break;
+diff --git a/src/jtag/drivers/ftdi.c b/src/jtag/drivers/ftdi.c
+index 00fe37f..cd13e52 100644
+--- a/src/jtag/drivers/ftdi.c
++++ b/src/jtag/drivers/ftdi.c
+@@ -855,6 +855,7 @@ COMMAND_HANDLER(ftdi_handle_set_signal_command)
+ 			ftdi_set_signal(sig, *CMD_ARGV[1]);
+ 			break;
+ 		}
++		// fallthrough
+ 	default:
+ 		LOG_ERROR("unknown signal level '%s', use 0, 1 or z", CMD_ARGV[1]);
+ 		return ERROR_COMMAND_SYNTAX_ERROR;
+diff --git a/src/svf/svf.c b/src/svf/svf.c
+index e7e815c..8877250 100644
+--- a/src/svf/svf.c
++++ b/src/svf/svf.c
+@@ -661,11 +661,13 @@ static int svf_read_command_from_file(FILE *fd)
+ 				if (svf_getline(&svf_read_line, &svf_read_line_size, svf_fd) <= 0)
+ 					return ERROR_FAIL;
+ 				i = -1;
++				// fallthrough
+ 			case '\r':
+ 				slash = 0;
+ 				/* Don't save '\r' and '\n' if no data is parsed */
+ 				if (!cmd_pos)
+ 					break;
++				// fallthrough
+ 			default:
+ 				/* The parsing code currently expects a space
+ 				 * before parentheses -- "TDI (123)".  Also a
+diff --git a/src/target/arm_adi_v5.c b/src/target/arm_adi_v5.c
+index eafc2dd..468a778 100644
+--- a/src/target/arm_adi_v5.c
++++ b/src/target/arm_adi_v5.c
+@@ -346,10 +346,13 @@ static int mem_ap_write(struct adiv5_ap *ap, const uint8_t *buffer, uint32_t siz
+ 			case 4:
+ 				outvalue |= (uint32_t)*buffer++ << 8 * (address++ & 3);
+ 				outvalue |= (uint32_t)*buffer++ << 8 * (address++ & 3);
++                                // fallthrough
+ 			case 2:
+ 				outvalue |= (uint32_t)*buffer++ << 8 * (address++ & 3);
++                                // fallthrough
+ 			case 1:
+ 				outvalue |= (uint32_t)*buffer++ << 8 * (address++ & 3);
++                                // fallthrough
+ 			}
+ 		}
+ 
+@@ -509,20 +512,26 @@ static int mem_ap_read(struct adiv5_ap *ap, uint8_t *buffer, uint32_t size, uint
+ 			case 4:
+ 				*buffer++ = *read_ptr >> 8 * (3 - (address++ & 3));
+ 				*buffer++ = *read_ptr >> 8 * (3 - (address++ & 3));
++                                // fallthrough
+ 			case 2:
+ 				*buffer++ = *read_ptr >> 8 * (3 - (address++ & 3));
++                                // fallthrough
+ 			case 1:
+ 				*buffer++ = *read_ptr >> 8 * (3 - (address++ & 3));
++                                // fallthrough
+ 			}
+ 		} else {
+ 			switch (this_size) {
+ 			case 4:
+ 				*buffer++ = *read_ptr >> 8 * (address++ & 3);
+ 				*buffer++ = *read_ptr >> 8 * (address++ & 3);
++                                // fallthrough
+ 			case 2:
+ 				*buffer++ = *read_ptr >> 8 * (address++ & 3);
++                                // fallthrough
+ 			case 1:
+ 				*buffer++ = *read_ptr >> 8 * (address++ & 3);
++                                // fallthrough
+ 			}
+ 		}
+ 
+@@ -1053,7 +1062,7 @@ static int dap_rom_display(struct command_context *cmd_ctx,
+ 	int retval;
+ 	uint64_t pid;
+ 	uint32_t cid;
+-	char tabs[7] = "";
++	char tabs[16] = "";
+ 
+ 	if (depth > 16) {
+ 		command_print(cmd_ctx, "\tTables too deep");
+diff --git a/src/target/arm_disassembler.c b/src/target/arm_disassembler.c
+index 5277b94..4c9f126 100644
+--- a/src/target/arm_disassembler.c
++++ b/src/target/arm_disassembler.c
+@@ -3299,6 +3299,7 @@ static int t2ev_data_immed(uint32_t opcode, uint32_t address,
+ 		case 0x10:
+ 		case 0x12:
+ 			is_signed = true;
++                        // fallthrough
+ 		case 0x18:
+ 		case 0x1a:
+ 			/* signed/unsigned saturated add */
+diff --git a/src/target/armv7a.c b/src/target/armv7a.c
+index 6021def..295fd98 100644
+--- a/src/target/armv7a.c
++++ b/src/target/armv7a.c
+@@ -355,6 +355,7 @@ int armv7a_mmu_translate_va_pa(struct target *target, uint32_t va,
+ 				break;
+ 			case 7:
+ 				LOG_INFO("inner: Write-Back, no Write-Allocate");
++                                break;
+ 
+ 			default:
+ 				LOG_INFO("inner: %" PRIx32 " ???", INNER);
+diff --git a/src/target/nds32_cmd.c b/src/target/nds32_cmd.c
+index edb4872..500651d 100644
+--- a/src/target/nds32_cmd.c
++++ b/src/target/nds32_cmd.c
+@@ -816,7 +816,7 @@ static int jim_nds32_bulk_read(Jim_Interp *interp, int argc, Jim_Obj * const *ar
+ 	uint32_t *data = malloc(count * sizeof(uint32_t));
+ 	int result;
+ 	result = target_read_buffer(target, address, count * 4, (uint8_t *)data);
+-	char data_str[11];
++	char data_str[12];
+ 
+ 	jim_wide i;
+ 	Jim_SetResult(interp, Jim_NewEmptyStringObj(interp));
+diff --git a/src/target/target.c b/src/target/target.c
+index c8a3ce4..8e26682 100644
+--- a/src/target/target.c
++++ b/src/target/target.c
+@@ -3568,6 +3568,7 @@ COMMAND_HANDLER(handle_bp_command)
+ 				addr = 0;
+ 				return handle_bp_command_set(CMD_CTX, addr, asid, length, hw);
+ 			}
++			// fallthrough
+ 
+ 		case 4:
+ 			hw = BKPT_HARD;
+-- 
+2.14.1
+

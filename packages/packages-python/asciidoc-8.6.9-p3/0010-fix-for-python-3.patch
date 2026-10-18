@@ -1,0 +1,25 @@
+From 031069f0de15c0270bd99dfe4f72c03e952711de Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 13:40:34 +0200
+Subject: [PATCH] fix for python 3
+
+---
+ asciidoc.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/asciidoc.py b/asciidoc.py
+index 5ed49b0..6b03a4d 100755
+--- a/asciidoc.py
++++ b/asciidoc.py
+@@ -693,7 +693,7 @@ def parse_entries(entries, dict, unquote=False, unique_values=False,
+     for entry in entries:
+         if entry and not parse_entry(entry, dict, unquote, unique_values,
+                 allow_name_only, escape_delimiter):
+-            raise EAsciiDoc,'malformed section entry: %s' % entry
++            raise ( EAsciiDoc,'malformed section entry: %s' % entry )
+ 
+ def dump_section(name,dict,f=sys.stdout):
+     """Write parameters in 'dict' as in configuration file section format with
+-- 
+2.14.1
+

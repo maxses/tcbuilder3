@@ -1,0 +1,34 @@
+From 2ad717340d253047e75b1fcbfac3e93738d79ab9 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 13:36:39 +0200
+Subject: [PATCH] fix for python 3
+
+---
+ asciidoc.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/asciidoc.py b/asciidoc.py
+index a3ce3da..ea5cf6c 100755
+--- a/asciidoc.py
++++ b/asciidoc.py
+@@ -547,7 +547,7 @@ def parse_list(s):
+     try:
+         result = tuple(parse_to_list(s))
+     except Exception:
+-        raise EAsciiDoc,'malformed list: '+s
++        raise ( EAsciiDoc,'malformed list: '+s )
+     return result
+ 
+ def parse_options(options,allowed,errmsg):
+@@ -559,7 +559,7 @@ def parse_options(options,allowed,errmsg):
+     if options:
+         for s in re.split(r'\s*,\s*',options):
+             if (allowed and s not in allowed) or not is_name(s):
+-                raise EAsciiDoc,'%s: %s' % (errmsg,s)
++                raise ( EAsciiDoc,'%s: %s' % (errmsg,s) )
+             result.append(s)
+     return tuple(result)
+ 
+-- 
+2.14.1
+

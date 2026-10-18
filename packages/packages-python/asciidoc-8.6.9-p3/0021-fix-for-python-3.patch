@@ -1,0 +1,25 @@
+From 39c1fcba99e77c2ea2783dfc8f43f830a7318008 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 14:46:40 +0200
+Subject: [PATCH] fix for python 3
+
+---
+ asciidoc.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/asciidoc.py b/asciidoc.py
+index 85be503..62f33ea 100755
+--- a/asciidoc.py
++++ b/asciidoc.py
+@@ -4619,7 +4619,7 @@ class Config:
+             if s[:2] == '\\#':          # Unescape lines starting with '#'.
+                 s = s[1:]
+             s = s.rstrip()
+-            found = reo.findall(s)
++            found = reo.findall(s.decode('utf-8'))
+             if found:
+                 update_section(section) # Store previous section.
+                 section = found[0].lower()
+-- 
+2.14.1
+

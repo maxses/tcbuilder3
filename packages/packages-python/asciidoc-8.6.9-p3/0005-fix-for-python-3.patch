@@ -1,0 +1,25 @@
+From a74ebcd79f543874d94498f9ac957c04980da41f Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 13:17:17 +0200
+Subject: [PATCH] fix for python 3
+
+---
+ a2x.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/a2x.py b/a2x.py
+index 89f74c9..fcc556b 100755
+--- a/a2x.py
++++ b/a2x.py
+@@ -108,7 +108,7 @@ class AttrDict(dict):
+         self[key] = value
+     def __delattr__(self, key):
+         try: del self[key]
+-        except KeyError, k: raise ( AttributeError, k )
++        except ( KeyError, k ): raise ( AttributeError, k )
+     def __repr__(self):
+         return '<AttrDict ' + dict.__repr__(self) + '>'
+     def __getstate__(self):
+-- 
+2.14.1
+

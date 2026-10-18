@@ -1,0 +1,102 @@
+From cd12c605839cd91cd276fe8a5bc52442c71d1202 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <mase@wost>
+Date: Sat, 28 Jun 2014 20:19:08 +0200
+Subject: [PATCH] fixed inline functions
+
+---
+ bfd/bfd-in2.h | 72 ++++++++++++++++++++++++++++++-----------------------------
+ 1 file changed, 37 insertions(+), 35 deletions(-)
+
+diff --git a/bfd/bfd-in2.h b/bfd/bfd-in2.h
+index cdac07b..8293251 100644
+--- a/bfd/bfd-in2.h
++++ b/bfd/bfd-in2.h
+@@ -521,41 +521,6 @@ extern void warn_deprecated (const char *, const char *, int, const char *);
+ 
+ #define bfd_get_symbol_leading_char(abfd) ((abfd)->xvec->symbol_leading_char)
+ 
+-{* See note beside bfd_set_section_userdata.  *}
+-static inline bfd_boolean
+-bfd_set_cacheable (bfd * abfd, bfd_boolean val)
+-{
+-  abfd->cacheable = val;
+-  return TRUE;
+-}
+-
+-
+-{* Note: the following are provided as inline functions rather than macros
+-   because not all callers use the return value.  A macro implementation
+-   would use a comma expression, eg: "((ptr)->foo = val, TRUE)" and some
+-   compilers will complain about comma expressions that have no effect.  *}
+-static inline bfd_boolean
+-bfd_set_section_userdata (bfd * abfd ATTRIBUTE_UNUSED, asection * ptr, void * val)
+-{
+-  ptr->userdata = val;
+-  return TRUE;
+-}
+-
+-static inline bfd_boolean
+-bfd_set_section_vma (bfd * abfd ATTRIBUTE_UNUSED, asection * ptr, bfd_vma val)
+-{
+-  ptr->vma = ptr->lma = val;
+-  ptr->user_set_vma = TRUE;
+-  return TRUE;
+-}
+-
+-static inline bfd_boolean
+-bfd_set_section_alignment (bfd * abfd ATTRIBUTE_UNUSED, asection * ptr, unsigned int val)
+-{
+-  ptr->alignment_power = val;
+-  return TRUE;
+-}
+-
+ 
+ extern bfd_boolean bfd_cache_close
+   (bfd *abfd);
+@@ -6996,6 +6961,43 @@ bfd_boolean bfd_init_section_decompress_status
+ bfd_boolean bfd_init_section_compress_status
+    (bfd *abfd, asection *section);
+ 
++/* See note beside bfd_set_section_userdata.  */
++static inline bfd_boolean
++bfd_set_cacheable (bfd * abfd, bfd_boolean val)
++{
++  abfd->cacheable = val;
++  return TRUE;
++}
++
++
++/* Note: the following are provided as inline functions rather than macros
++   because not all callers use the return value.  A macro implementation
++   would use a comma expression, eg: "((ptr)->foo = val, TRUE)" and some
++   compilers will complain about comma expressions that have no effect.  */
++static inline bfd_boolean
++bfd_set_section_userdata (bfd * abfd ATTRIBUTE_UNUSED, asection * ptr, void * val)
++{
++  ptr->userdata = val;
++  return TRUE;
++}
++
++static inline bfd_boolean
++bfd_set_section_vma (bfd * abfd ATTRIBUTE_UNUSED, asection * ptr, bfd_vma val)
++{
++  ptr->vma = ptr->lma = val;
++  ptr->user_set_vma = TRUE;
++  return TRUE;
++}
++
++static inline bfd_boolean
++bfd_set_section_alignment (bfd * abfd ATTRIBUTE_UNUSED, asection * ptr, unsigned int val)
++{
++  ptr->alignment_power = val;
++  return TRUE;
++}
++
++
++
+ #ifdef __cplusplus
+ }
+ #endif
+-- 
+2.0.0
+

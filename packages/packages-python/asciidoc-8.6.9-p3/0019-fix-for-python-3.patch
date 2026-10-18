@@ -1,0 +1,25 @@
+From fe536a659865018fab58efc9e568e86082f10d7c Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 14:39:43 +0200
+Subject: [PATCH] fix for python 3
+
+---
+ asciidoc.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/asciidoc.py b/asciidoc.py
+index 38c308a..57ae723 100755
+--- a/asciidoc.py
++++ b/asciidoc.py
+@@ -3811,7 +3811,7 @@ class Macros:
+         macro name 'name'."""
+         for m in self.macros:
+             if m.prefix == prefix:
+-                mo = m.reo.match(text).decode('utf-8')
++                mo = m.reo.match(text.decode('utf-8'))
+                 if mo:
+                     if m.name == name:
+                         return mo
+-- 
+2.14.1
+

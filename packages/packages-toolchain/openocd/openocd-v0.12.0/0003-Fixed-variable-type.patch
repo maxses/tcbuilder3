@@ -1,0 +1,25 @@
+From c296a3320ec88a1bd7347aee148b46c043dff5c2 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Tue, 13 Oct 2026 13:07:04 +0200
+Subject: [PATCH] Fixed variable type
+
+---
+ src/server/telnet_server.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/server/telnet_server.c b/src/server/telnet_server.c
+index 938bc5b06..fa3523553 100644
+--- a/src/server/telnet_server.c
++++ b/src/server/telnet_server.c
+@@ -68,7 +68,7 @@ static int telnet_outputline(struct connection *connection, const char *line)
+ 
+ 	/* process lines in buffer */
+ 	while (*line) {
+-		char *line_end = strchr(line, '\n');
++		const char *line_end = strchr(line, '\n');
+ 
+ 		if (line_end)
+ 			len = line_end-line;
+-- 
+2.53.0
+

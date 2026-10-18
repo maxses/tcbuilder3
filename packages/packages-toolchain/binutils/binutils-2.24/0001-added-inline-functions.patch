@@ -1,0 +1,59 @@
+From 1598428fd42db31de201c8852f524dc7d4569e15 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <mase@wost>
+Date: Sat, 28 Jun 2014 20:14:50 +0200
+Subject: [PATCH] added inline functions
+
+---
+ bfd/bfd-in2.h | 36 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 35 insertions(+), 1 deletion(-)
+
+diff --git a/bfd/bfd-in2.h b/bfd/bfd-in2.h
+index f7e80a3..cdac07b 100644
+--- a/bfd/bfd-in2.h
++++ b/bfd/bfd-in2.h
+@@ -521,7 +521,41 @@ extern void warn_deprecated (const char *, const char *, int, const char *);
+ 
+ #define bfd_get_symbol_leading_char(abfd) ((abfd)->xvec->symbol_leading_char)
+ 
+-#define bfd_set_cacheable(abfd,bool) (((abfd)->cacheable = bool), TRUE)
++{* See note beside bfd_set_section_userdata.  *}
++static inline bfd_boolean
++bfd_set_cacheable (bfd * abfd, bfd_boolean val)
++{
++  abfd->cacheable = val;
++  return TRUE;
++}
++
++
++{* Note: the following are provided as inline functions rather than macros
++   because not all callers use the return value.  A macro implementation
++   would use a comma expression, eg: "((ptr)->foo = val, TRUE)" and some
++   compilers will complain about comma expressions that have no effect.  *}
++static inline bfd_boolean
++bfd_set_section_userdata (bfd * abfd ATTRIBUTE_UNUSED, asection * ptr, void * val)
++{
++  ptr->userdata = val;
++  return TRUE;
++}
++
++static inline bfd_boolean
++bfd_set_section_vma (bfd * abfd ATTRIBUTE_UNUSED, asection * ptr, bfd_vma val)
++{
++  ptr->vma = ptr->lma = val;
++  ptr->user_set_vma = TRUE;
++  return TRUE;
++}
++
++static inline bfd_boolean
++bfd_set_section_alignment (bfd * abfd ATTRIBUTE_UNUSED, asection * ptr, unsigned int val)
++{
++  ptr->alignment_power = val;
++  return TRUE;
++}
++
+ 
+ extern bfd_boolean bfd_cache_close
+   (bfd *abfd);
+-- 
+2.0.0
+

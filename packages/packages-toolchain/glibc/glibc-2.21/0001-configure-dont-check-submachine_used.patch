@@ -1,0 +1,25 @@
+From bea1451a26ff70b85872c8412bf31e4b5e0a3262 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Fri, 1 May 2015 13:39:10 +0200
+Subject: [PATCH] configure: dont check submachine_used
+
+---
+ configure | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/configure b/configure
+index fc023d0..9e5d57f 100755
+--- a/configure
++++ b/configure
+@@ -4164,6 +4164,8 @@ for b in $base ''; do
+ 		test -n "$enable_debug_configure" &&
+ 		echo "$0 DEBUG: try $try" >&2
+ 		if test -d "$try_srcdir$try"; then
++		  # submachine_used does not work for some reason
++		  submachine_used=t
+ 		  sysnames="$sysnames $try"
+ 		  { test -n "$o" || test -n "$b"; } && os_used=t
+ 		  { test -n "$m" || test -n "$m0"; } && machine_used=t
+-- 
+2.1.4
+

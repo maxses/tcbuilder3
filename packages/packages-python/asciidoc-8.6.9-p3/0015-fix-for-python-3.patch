@@ -1,0 +1,25 @@
+From a86afb7caa4e9a03bc9f45736edfcb6f8a8c9dfe Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 14:03:04 +0200
+Subject: [PATCH] fix for python 3
+
+---
+ asciidoc.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/asciidoc.py b/asciidoc.py
+index fcaff49..6213037 100755
+--- a/asciidoc.py
++++ b/asciidoc.py
+@@ -5935,7 +5935,7 @@ def asciidoc(backend, doctype, confiles, infile, outfile, options):
+         # Check the infile exists.
+         if infile != '<stdin>':
+             if not os.path.isfile(infile):
+-                raise ( ( EAsciiDoc,'input file %s missing' % infile )
++                raise ( EAsciiDoc,'input file %s missing' % infile )
+         document.infile = infile
+         AttributeList.initialize()        # Open input file and parse document header.
+         reader.tabsize = config.tabsize
+-- 
+2.14.1
+

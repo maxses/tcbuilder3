@@ -1,0 +1,31 @@
+From 0fa57089e1f4c9bf2b3360352991f0ebb131472a Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Tue, 23 Jun 2026 21:08:47 +0200
+Subject: [PATCH] Fixed compiling
+
+---
+ sysdeps/unix/sysv/linux/sys/mount.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/sysdeps/unix/sysv/linux/sys/mount.h b/sysdeps/unix/sysv/linux/sys/mount.h
+index 457d8dcf..09f9d177 100644
+--- a/sysdeps/unix/sysv/linux/sys/mount.h
++++ b/sysdeps/unix/sysv/linux/sys/mount.h
+@@ -265,7 +265,14 @@ enum fsconfig_command
+ #define FSOPEN_CLOEXEC          0x00000001
+ 
+ /* open_tree flags.  */
++#if ! defined( OPEN_TREE_CLONE )
+ #define OPEN_TREE_CLONE    1         /* Clone the target tree and attach the clone */
++#endif
++
++#if ( OPEN_TREE_CLONE != 1 )
++  #error OPEN_TREE_CLONE is not 1
++#endif
++
+ #define OPEN_TREE_CLOEXEC  O_CLOEXEC /* Close the file on execve() */
+ 
+ 
+-- 
+2.53.0
+

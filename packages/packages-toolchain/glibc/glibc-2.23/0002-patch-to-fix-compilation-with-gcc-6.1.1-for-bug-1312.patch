@@ -1,0 +1,53 @@
+From c63073b40a3b3caa183c852eb16dc474938505ff Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Wed, 8 Jun 2016 20:11:23 +0200
+Subject: [PATCH] patch to fix compilation with gcc-6.1.1 for bug #1312963
+
+---
+ nis/nis_call.c  | 2 ++
+ stdlib/setenv.c | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/nis/nis_call.c b/nis/nis_call.c
+index 3fa37e4..0cbab9c 100644
+--- a/nis/nis_call.c
++++ b/nis/nis_call.c
+@@ -680,6 +680,7 @@ nis_server_cache_add (const_nis_name name, int search_parent,
+   /* Choose which entry should be evicted from the cache.  */
+   loc = &nis_server_cache[0];
+   if (*loc != NULL)
++  {
+     for (i = 1; i < 16; ++i)
+       if (nis_server_cache[i] == NULL)
+ 	{
+@@ -690,6 +691,7 @@ nis_server_cache_add (const_nis_name name, int search_parent,
+ 	       || ((*loc)->uses == nis_server_cache[i]->uses
+ 		   && (*loc)->expires > nis_server_cache[i]->expires))
+ 	loc = &nis_server_cache[i];
++  }
+   old = *loc;
+   *loc = new;
+ 
+diff --git a/stdlib/setenv.c b/stdlib/setenv.c
+index da61ee0..5c7e96c 100644
+--- a/stdlib/setenv.c
++++ b/stdlib/setenv.c
+@@ -277,6 +277,7 @@ unsetenv (const char *name)
+ 
+   ep = __environ;
+   if (ep != NULL)
++  {
+     while (*ep != NULL)
+       if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
+ 	{
+@@ -290,6 +291,7 @@ unsetenv (const char *name)
+ 	}
+       else
+ 	++ep;
++  }
+ 
+   UNLOCK;
+ 
+-- 
+2.8.1
+

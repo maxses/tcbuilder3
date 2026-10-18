@@ -1,0 +1,25 @@
+From 6d82cbe8730b3f553c0024ce3296c30c020e0b2e Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sat, 23 Sep 2017 18:45:00 +0200
+Subject: [PATCH] initialize string
+
+---
+ src/jtag/aice/aice_transport.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/jtag/aice/aice_transport.c b/src/jtag/aice/aice_transport.c
+index 9f07946..f470b96 100644
+--- a/src/jtag/aice/aice_transport.c
++++ b/src/jtag/aice/aice_transport.c
+@@ -89,7 +89,7 @@ static int jim_aice_newtap_cmd(Jim_GetOptInfo *goi)
+ 		return JIM_ERR;
+ 	}
+ 
+-	const char *tmp;
++	const char *tmp=NULL;
+ 	Jim_GetOpt_String(goi, &tmp, NULL);
+ 	pTap->chip = strdup(tmp);
+ 
+-- 
+2.14.1
+

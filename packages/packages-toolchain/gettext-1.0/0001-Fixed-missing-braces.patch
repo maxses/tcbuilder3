@@ -1,0 +1,37 @@
+From ddb81a7eeb12c6133b76d3360a01bb4356dc12ea Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Tue, 13 Oct 2026 12:41:11 +0200
+Subject: [PATCH] Fixed missing braces
+
+---
+ gettext-runtime/gnulib-lib/progreloc.c | 1 +
+ gettext-tools/gnulib-lib/progreloc.c   | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/gettext-runtime/gnulib-lib/progreloc.c b/gettext-runtime/gnulib-lib/progreloc.c
+index bac7cd0..c772d50 100644
+--- a/gettext-runtime/gnulib-lib/progreloc.c
++++ b/gettext-runtime/gnulib-lib/progreloc.c
+@@ -258,6 +258,7 @@ find_executable (const char *argv0)
+     sprintf (buf, "/proc/%d/exe", getpid ());
+     char *link = xreadlink (buf);
+     if (link != NULL && link[0] != '[')
++    {
+       return link;
+     }
+     if (executable_fd < 0)
+diff --git a/gettext-tools/gnulib-lib/progreloc.c b/gettext-tools/gnulib-lib/progreloc.c
+index bac7cd0..c772d50 100644
+--- a/gettext-tools/gnulib-lib/progreloc.c
++++ b/gettext-tools/gnulib-lib/progreloc.c
+@@ -258,6 +258,7 @@ find_executable (const char *argv0)
+     sprintf (buf, "/proc/%d/exe", getpid ());
+     char *link = xreadlink (buf);
+     if (link != NULL && link[0] != '[')
++    {
+       return link;
+     }
+     if (executable_fd < 0)
+-- 
+2.53.0
+

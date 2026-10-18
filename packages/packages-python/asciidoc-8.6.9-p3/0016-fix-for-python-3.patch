@@ -1,0 +1,93 @@
+From ab693672aff3993ea2d64b3d7d862e4b968e6040 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 14:08:54 +0200
+Subject: [PATCH] fix for python 3
+
+---
+ asciidoc.py | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/asciidoc.py b/asciidoc.py
+index 6213037..2961062 100755
+--- a/asciidoc.py
++++ b/asciidoc.py
+@@ -98,7 +98,7 @@ class AttrDict(dict):
+         self[key] = value
+     def __delattr__(self, key):
+         try: del self[key]
+-        except ( KeyError, k ): raise ( AttributeError, k )
++        except KeyError as k: raise ( AttributeError, k )
+     def __repr__(self):
+         return '<AttrDict ' + dict.__repr__(self) + '>'
+     def __getstate__(self):
+@@ -1225,7 +1225,7 @@ def char_encoding():
+     if encoding:
+         try:
+             codecs.lookup(encoding)
+-        except ( LookupError,e ):
++        except LookupError as e:
+             raise ( EAsciiDoc,str(e) )
+     return encoding
+ 
+@@ -2666,7 +2666,7 @@ class AbstractBlocks:
+                     self.blocks.append(b)
+                 try:
+                     b.load(k,d)
+-                except ( EAsciiDoc,e ):
++                except EAsciiDoc as e:
+                     raise ( EAsciiDoc,'[%s] %s' % (k,str(e)) )
+     def dump(self):
+         for b in self.blocks:
+@@ -4329,7 +4329,7 @@ class Reader(Reader1):
+                     if attrlist:
+                         try:
+                             cond = eval(attrlist)
+-                        except ( Exception,e ):
++                        except Exception as e:
+                             raise ( EAsciiDoc,'error evaluating ifeval condition: %s: %s' % (result, str(e)) )
+                         message.verbose('ifeval: %s: %r' % (attrlist, cond))
+                     self.skip = not cond
+@@ -5787,11 +5787,11 @@ class Plugin:
+             die('%s is already installed: %s' % (Plugin.type, plugin_dir))
+         try:
+             os.makedirs(plugin_dir)
+-        except ( Exception,e ):
++        except Exception as e:
+             die('failed to create %s directory: %s' % (Plugin.type, str(e)))
+         try:
+             extract_zip(zip_file, plugin_dir)
+-        except ( Exception,e ):
++        except Exception as e:
+             if os.path.isdir(plugin_dir):
+                 shutil.rmtree(plugin_dir)
+             die('failed to extract %s: %s' % (Plugin.type, str(e)))
+@@ -5823,7 +5823,7 @@ class Plugin:
+         try:
+             message.verbose('removing: %s' % plugin_dir)
+             shutil.rmtree(plugin_dir)
+-        except ( Exception,e ):
++        except Exception as e:
+             die('failed to delete %s: %s' % (Plugin.type, str(e)))
+ 
+     @staticmethod
+@@ -5852,7 +5852,7 @@ class Plugin:
+             die('plugin source not found: %s' % plugin_source)
+         try:
+             create_zip(zip_file, plugin_source, skip_hidden=True)
+-        except ( Exception,e ):
++        except Exception e:
+             die('failed to create %s: %s' % (zip_file, str(e)))
+ 
+ 
+@@ -6026,7 +6026,7 @@ def asciidoc(backend, doctype, confiles, infile, outfile, options):
+                 reader.closefile()
+     except KeyboardInterrupt:
+         raise
+-    except ( Exception,e ):
++    except Exception e:
+         # Cleanup.
+         if outfile and outfile != '<stdout>' and os.path.isfile(outfile):
+             os.unlink(outfile)
+-- 
+2.14.1
+

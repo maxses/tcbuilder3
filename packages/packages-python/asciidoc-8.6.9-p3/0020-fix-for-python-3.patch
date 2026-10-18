@@ -1,0 +1,25 @@
+From 21409757ab1ee81a63a2abc7af3cfe8aea860e5e Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 14:44:41 +0200
+Subject: [PATCH] fix for python 3
+
+---
+ asciidoc.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/asciidoc.py b/asciidoc.py
+index 57ae723..85be503 100755
+--- a/asciidoc.py
++++ b/asciidoc.py
+@@ -4075,7 +4075,7 @@ class CalloutMap:
+ # Input stream Reader and output stream writer classes.
+ #---------------------------------------------------------------------------
+ 
+-UTF8_BOM = '\xef\xbb\xbf'
++UTF8_BOM = b"\xef\xbb\xbf"
+ 
+ class Reader1:
+     """Line oriented AsciiDoc input file reader. Processes include and
+-- 
+2.14.1
+

@@ -1,0 +1,66 @@
+From 007e1742151a2f73338473f80825f2488da693c1 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Tue, 13 Oct 2026 12:56:21 +0200
+Subject: [PATCH] Fixed compiling with unused variables
+
+---
+ src/flash/nor/tcl.c        | 1 +
+ src/server/gdb_server.c    | 2 ++
+ src/target/arm7_9_common.c | 2 ++
+ src/target/riscv/riscv.c   | 2 ++
+ 4 files changed, 7 insertions(+)
+
+diff --git a/src/flash/nor/tcl.c b/src/flash/nor/tcl.c
+index 4ff6d9838..bfcd3ec02 100644
+--- a/src/flash/nor/tcl.c
++++ b/src/flash/nor/tcl.c
+@@ -1315,6 +1315,7 @@ COMMAND_HANDLER(handle_flash_banks_command)
+ 		return ERROR_COMMAND_SYNTAX_ERROR;
+ 
+ 	unsigned n = 0;
++	(void)n;
+ 	for (struct flash_bank *p = flash_bank_list(); p; p = p->next, n++) {
+ 		command_print(CMD, "#%d : %s (%s) at " TARGET_ADDR_FMT ", size 0x%8.8" PRIx32 ", "
+ 			"buswidth %u, chipwidth %u", p->bank_number,
+diff --git a/src/server/gdb_server.c b/src/server/gdb_server.c
+index d8dbc2c8b..a75d71c21 100644
+--- a/src/server/gdb_server.c
++++ b/src/server/gdb_server.c
+@@ -2983,6 +2983,8 @@ static bool gdb_handle_vcont_packet(struct connection *connection, const char *p
+ 	const char *parse = packet;
+ 	int retval;
+ 
++	(void)packet_size;
++
+ 	/* query for vCont supported */
+ 	if (parse[0] == '?') {
+ 		if (target->type->step) {
+diff --git a/src/target/arm7_9_common.c b/src/target/arm7_9_common.c
+index 8f87d9cda..498f37d5f 100644
+--- a/src/target/arm7_9_common.c
++++ b/src/target/arm7_9_common.c
+@@ -1556,6 +1556,8 @@ static int arm7_9_restore_context(struct target *target)
+ 			int num_regs = 0;
+ 			uint32_t regs[16];
+ 
++			(void)num_regs;
++
+ 			if (mode_change) {
+ 				uint32_t tmp_cpsr;
+ 
+diff --git a/src/target/riscv/riscv.c b/src/target/riscv/riscv.c
+index 4f24fb41e..7dd35e4b8 100644
+--- a/src/target/riscv/riscv.c
++++ b/src/target/riscv/riscv.c
+@@ -2190,6 +2190,8 @@ int riscv_openocd_poll(struct target *target)
+ 		unsigned halts_discovered = 0;
+ 		unsigned should_remain_halted = 0;
+ 		unsigned should_resume = 0;
++		// Unused
++		(void)halts_discovered;
+ 		struct target_list *list;
+ 		foreach_smp_target(list, target->smp_targets) {
+ 			struct target *t = list->target;
+-- 
+2.53.0
+

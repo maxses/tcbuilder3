@@ -1,0 +1,26 @@
+From 725c6b537786a81843666159139c85a4e9615b5d Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Fri, 1 May 2015 16:38:36 +0200
+Subject: [PATCH] features.h: dont include gnu/stubs.h; it may not exist yet
+
+---
+ include/features.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/include/features.h b/include/features.h
+index 21173a2..76117a0 100644
+--- a/include/features.h
++++ b/include/features.h
+@@ -399,7 +399,8 @@
+    Get the definitions of all the appropriate `__stub_FUNCTION' symbols.
+    <gnu/stubs.h> contains `#define __stub_FUNCTION' when FUNCTION is a stub
+    that will always return failure (and set errno to ENOSYS).  */
+-#include <gnu/stubs.h>
++// [mase]: don't include stubs, it may not exist yet.
++// #include <gnu/stubs.h>
+ 
+ 
+ #endif	/* features.h  */
+-- 
+2.1.4
+

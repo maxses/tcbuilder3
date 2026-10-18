@@ -1,0 +1,34 @@
+From df2fbe1d1a9e61ac4f0921a9ed8d8bb8bae055be Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 14:10:32 +0200
+Subject: [PATCH] fix for python 3
+
+---
+ asciidoc.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/asciidoc.py b/asciidoc.py
+index 2961062..3172c37 100755
+--- a/asciidoc.py
++++ b/asciidoc.py
+@@ -5852,7 +5852,7 @@ class Plugin:
+             die('plugin source not found: %s' % plugin_source)
+         try:
+             create_zip(zip_file, plugin_source, skip_hidden=True)
+-        except Exception e:
++        except Exception as e:
+             die('failed to create %s: %s' % (zip_file, str(e)))
+ 
+ 
+@@ -6026,7 +6026,7 @@ def asciidoc(backend, doctype, confiles, infile, outfile, options):
+                 reader.closefile()
+     except KeyboardInterrupt:
+         raise
+-    except Exception e:
++    except Exception as e:
+         # Cleanup.
+         if outfile and outfile != '<stdout>' and os.path.isfile(outfile):
+             os.unlink(outfile)
+-- 
+2.14.1
+

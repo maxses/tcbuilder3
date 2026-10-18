@@ -1,0 +1,25 @@
+From d71eedef47ba156e0782f3f41bae33b846c0b4c9 Mon Sep 17 00:00:00 2001
+From: Maximilian Seesslen <dev@seesslen.net>
+Date: Sun, 10 Sep 2017 13:16:10 +0200
+Subject: [PATCH] fix for python 3
+
+---
+ asciidoc.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/asciidoc.py b/asciidoc.py
+index d1a8929..7c47588 100755
+--- a/asciidoc.py
++++ b/asciidoc.py
+@@ -98,7 +98,7 @@ class AttrDict(dict):
+         self[key] = value
+     def __delattr__(self, key):
+         try: del self[key]
+-        except KeyError, k: raise AttributeError, k
++        except ( KeyError, k ): raise ( AttributeError, k )
+     def __repr__(self):
+         return '<AttrDict ' + dict.__repr__(self) + '>'
+     def __getstate__(self):
+-- 
+2.14.1
+

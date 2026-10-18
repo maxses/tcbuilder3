@@ -1,0 +1,13 @@
+
+_getpid = _getpid;
+_sbrk = _sbrk;
+_read = _read;
+_write = _write;
+_kill = _kill;
+_exit = _exit;
+_isatty = _isatty;
+_lseek = _lseek;
+_open = _open;
+_close = _close;
+_fstat = _fstat;
+

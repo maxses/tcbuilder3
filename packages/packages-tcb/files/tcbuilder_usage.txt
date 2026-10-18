@@ -1,0 +1,21 @@
+== Intro ==
+
+TCBuilder is a Makefile based framework for creating toolchains.
+
+== Installing precreated toolchain ==
+
+Example:
+```
+cd /opt
+tar -xjf /home/user/Downloads/tcbuilder3-stm32-x86_64-3.2.0-20261017.tbz
+cd tcb-3.2.0-stm32-x86_64
+./relocate.sh
+```
+
+== Using toolchain ==
+
+Example:
+```
+echo "int main() { return(0); }" > main.c
+./usr/bin/arm-none-eabi/arm-none-eabi-gcc -c main.c -o output.obj
+```
