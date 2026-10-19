@@ -2,8 +2,8 @@
 #
 #  \brief   GCC recipe for tcbuilder3
 #
-#           There are static_gcc, minimal_gcc and gcc.
-#           "minimal_gcc" is only used compiling with glibc.
+#           The different stages static_gcc/minimal_gcc/gcc are not needed any 
+#           more
 #
 #  \author  Maximilian Seesslen <src@seesslen.net>
 #  \date    <20130403> file created
@@ -11,40 +11,21 @@
 #------------------------------------------------------------------------------
 
 
-#-----------------------------------------------
-#
-#                  |- glibc_headers
-#                  /-crt0.o
-#    gcc    -> minimal_gcc ->static_gcc
-#  (C,C++)        (C)             (C)
-#
-#   Why is static_gcc needed anyway?
-#   --enable-languages=c++: g++ (libstdc++) needs libc headers.
-#
-#-----------------------------------------------
+gcc.VERSION             = releases/gcc-16.2.0
+gcc.PATCH_POSTFIX       = -16
+gcc.SCM_TOOL            = git
+gcc.SCM_URL             = https://gcc.gnu.org/git/gcc.git
 
-
-gcc.VERSION          =  releases/gcc-16.2.0
-gcc.PATCH_POSTFIX    =  -16
-
-gcc.SCM_TOOL         =  git
-gcc.SCM_URL          =  https://gcc.gnu.org/git/gcc.git
-
-gcc.SOURCE_PATH      =	gcc-mainline
+gcc.SOURCE_PATH         = gcc-mainline
 $(eval $(call Package,gcc))
+$(eval $(call template,gcc,cross))
+$(eval $(call useOwnLd, gcc))
+$(eval $(call useOwnLdTarget, gcc))
 $(eval $(call useOwnLdNative, gcc))
+$(eval $(call template, libcxx, host))
+$(eval $(call useOwnLdNative, libcxx))
 
-### --libexecdir: ${libexecdir}/gcc/arm-none-eabi/5.1.0   x86  Bins and Libs for creating ARM-Code
-### --libdir:     ${libdir}/gcc/arm-none-eabi/5.1.0       ARM-Objects and AMR-Libs (crti.o)
-### --libdir=$(NONUSR_PREFIX)/lib:     arm-none-eabi-gcc uses as of host system
-###                                    ( Gcc 4.9.2, 5.1.0, multilib)
-### --with-<build->sysroot=$(GSYSROOT) verified neccessary to let libc find headers
-### --with-headers:  This directory would be copied to the gccs build directory
-###                  for some reason. If a previous build was complete a
-###                  recompile is not possible any more (#299)
-###                  We use a dummy directory so nothing happens.
-### libgomp, libatomic, libitm, libsanitizer only available for native build
-
+# libgomp, libatomic, libitm, libsanitizer: only available for native build
 gcc.BASE_CONFIGUREFLAGS            = 	\
                                  $(cross.CONFIGUREFLAGS) \
                                  $(gcc.MULTILIB) \
@@ -56,12 +37,12 @@ gcc.BASE_CONFIGUREFLAGS            = 	\
                                  --enable-nls \
                                  --disable-vtable-verify \
                                  --disable-checking \
-                                 --disable-stage1-checking \
-                                 \
-                                 --cache-file=$(BUILD_PATH)/tcb-config-gcc.cache
-                                 build_configargs="--cache-file=$(BUILD_PATH)/tcb-config-gcc-build.cache" \
-                                 host_configargs="--cache-file=$(BUILD_PATH)/tcb-config-gcc-host.cache" \
-                                 target_configargs="--cache-file=tcb-config-gcc-target.cache"
+                                 --disable-stage1-checking
+                                 
+#                                 --cache-file=$(BUILD_PATH)/tcb-config-gcc.cache
+#                                 build_configargs="--cache-file=$(BUILD_PATH)/tcb-config-gcc-build.cache" \
+#                                 host_configargs="--cache-file=$(BUILD_PATH)/tcb-config-gcc-host.cache" \
+#                                 target_configargs="--cache-file=tcb-config-gcc-target.cache"
 
 
 ### --with-system-zlib: It is already compiled
@@ -77,28 +58,7 @@ gcc.CONFIGUREFLAGS            += 	\
                                  --enable-plugin \
                                  --enable-liboffloadmic=target \
                                  --enable-threads \
-											--disable-bootstrap
-
-
-# Breaks STM32; bin-files are garbage
-#--enable-linker-build-id
-
-# Evil; PLT-Section-Issue
-# --enable-default-pie
-
-# gcc.CFLAGS_FOR_TARGET        += -D__x86_64__
-gcc.ENVIRONMENT                   =$(cross.ENVIRONMENT) \
-                                    AS_FOR_TARGET="$(TARGET)-as" \
-												LD_FOR_TARGET="$(TARGET)-ld"
-gcc.DESTDIR                      =$(cross.DESTDIR)
-
-gcc.LIMITS_PATH                   =$(INSTALLROOT_HOST)$(HOST_PREFIX)/lib/$(TARGET)/gcc/$(TARGET)/$(gcc.VERSION)/include-fixed
-
-$(eval $(call useOwnLd, gcc))
-$(eval $(call useOwnLdTarget, gcc))
-
-gcc.ENVIRONMENT            += \
-                                 LIBRARY_PATH=$(SYSROOT_HOST)/$(HOST_NONUSR_PREFIX)/lib
+                                 --disable-bootstrap
 
 
 #------Targets----------------------------------
@@ -106,12 +66,6 @@ gcc.ENVIRONMENT            += \
 
 gcc.init: glibc_native.issue libtool.issue linux_headers-native.issue
 gcc.cmi_configure: flex.issue gawk.issue
-# gcc.cmi_make: static_gcc.ldconfig2.custom_step
-
-#static_gcc.ldconfig2.custom_step: static_gcc.cmi_configure
-#	@$(SYSROOT_HOST)/$(HOST_NONUSR_PREFIX)/sbin/ldconfig
-#	$(silentDone)
-
 
 gcc.limits_fix.hook: gcc.install gcc.cmi_make_install
 		@[ -e "$(gcc.LIMITS_PATH)/limits_org.h" ] || cp "$(gcc.LIMITS_PATH)/limits.h" "$(gcc.LIMITS_PATH)/limits_org.h"
@@ -146,7 +100,6 @@ gcc.prebuild:            zlib-host.issue
 gcc.sourcebase:                 gcc.scm_sourcebase
 gcc.sourcetree:                 gcc.sourcebase_patched
 gcc.preconfigure:               mpc.issue mpfr.issue gmp.issue binutils.issue isl.issue
-# gcc.preconfigure:               libc.issue
 gcc.cmi_make:                   libc_headers.issue
 gcc.cmi_make:                   libc_headers.issue
 
@@ -190,16 +143,14 @@ libcxx.CONFIGUREFLAGS	= \
 
 libcxx.DESTDIR	=        $(host.DESTDIR)
 
-$(eval $(call useOwnLdNative, libcxx))
-
-libcxx.ENVIRONMENT	+=  \
-                        DESTDIR="$(INSTALLROOT_HOST)" \
-			LDFLAGS="$(useOwnLdNative.FLAGS)" \
-			LDFLAGS_FOR_BUILD="$(useOwnLdNative.FLAGS)" \
-			CFLAGS="$(useOwnLdNative.FLAGS)" \
-			CFLAGS_FOR_BUILD="$(useOwnLdNative.FLAGS)" \
-			CXXFLAGS="$(useOwnLdNative.FLAGS)" \
-			CXXFLAGS_FOR_BUILD="$(useOwnLdNative.FLAGS)"
+#libcxx.ENVIRONMENT	+=  \
+#                        DESTDIR="$(INSTALLROOT_HOST)" \
+#			LDFLAGS="$(useOwnLdNative.FLAGS)" \
+#			LDFLAGS_FOR_BUILD="$(useOwnLdNative.FLAGS)" \
+#			CFLAGS="$(useOwnLdNative.FLAGS)" \
+#			CFLAGS_FOR_BUILD="$(useOwnLdNative.FLAGS)" \
+#			CXXFLAGS="$(useOwnLdNative.FLAGS)" \
+#			CXXFLAGS_FOR_BUILD="$(useOwnLdNative.FLAGS)"
 
 libcxx.VERSION             = $(gcc.VERSION)
 
@@ -236,12 +187,6 @@ libcxx.cmi_configure: mpc.issue mpfr.issue gmp.issue glibc_native.issue
 # texinfo is needed to provide 'makeinfo'
 libcxx.cmi_configure: texinfo.issue
 
-#### Run ldconfig
-libcxx.cmi_make: libcxx.custom_step
-libcxx.custom_step: libcxx.cmi_configure
-	@#$(SYSROOT_HOST)/$(HOST_NONUSR_PREFIX)/sbin/ldconfig
-	$(done)
-
 #--- native-gcc --------------------------------------------------------------
 
 gcc_native.SOURCE_PATH     	=	$(gcc.SOURCE_PATH)/libstdc++-v3
@@ -268,5 +213,6 @@ gcc_native.CONFIGUREFLAGS	=	--prefix=$(HOST_PREFIX) \
 
 gcc_native.issue: gcc_native.cmi
 	$(node)
+
 
 #---fin------------------------------------------------------------------------
