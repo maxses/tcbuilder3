@@ -13,7 +13,7 @@
 
 openssl.VERSION						=	4.0.3
 openssl.ARCHIVE_FILE					=	openssl-$(openssl.VERSION).tar.gz
-openssl.ARCHIVE_URL					=	http://www.openssl.org/source/$(openssl.ARCHIVE_FILE)
+openssl.ARCHIVE_URL					=	https://www.openssl.org/source/$(openssl.ARCHIVE_FILE)
 openssl.ENTRY_PATH					=	openssl-$(openssl.VERSION)
 openssl.SOURCE_PATH					=	openssl-$(openssl.VERSION)
 openssl.BOOTSTRAP_ARGS				=	dist threads -D_REENTRANT

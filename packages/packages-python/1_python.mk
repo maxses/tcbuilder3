@@ -21,7 +21,7 @@ python3.MAJOR_VERSION         =	$(python.MAJOR_VERSION)
 python.MAJOR_VERSION_INCLUDE	=	$(python.MAJOR_VERSION)
 python3.MAJOR_VERSION_INCLUDE	=	$(python.MAJOR_VERSION)
 python.ARCHIVE_FILE				=	Python-$(python.VERSION).tar.xz
-python.ARCHIVE_URL				=	http://www.python.org/ftp/python/$(python.VERSION)/$(python.ARCHIVE_FILE)
+python.ARCHIVE_URL				=	https://www.python.org/ftp/python/$(python.VERSION)/$(python.ARCHIVE_FILE)
 python.ENTRY_PATH					=	Python-$(python.VERSION)
 python.SOURCE_PATH				=	Python-$(python.VERSION)
 #-- disbale-ipv6: Fatal: You must get working getaddrinfo() function. or you \

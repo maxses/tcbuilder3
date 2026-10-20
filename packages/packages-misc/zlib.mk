@@ -18,7 +18,7 @@
 
 zlib.VERSION						=1.3.2
 zlib.ARCHIVE_FILE					=zlib-$(zlib.VERSION).tar.gz
-zlib.ARCHIVE_URL					=http://zlib.net//$(zlib.ARCHIVE_FILE)
+zlib.ARCHIVE_URL					=https://zlib.net//$(zlib.ARCHIVE_FILE)
 zlib.ENTRY_PATH					=zlib-$(zlib.VERSION)
 zlib.SOURCE_PATH					=zlib-$(zlib.VERSION)
 zlib.CONFIGUREFLAGS				= \

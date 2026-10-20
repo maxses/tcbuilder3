@@ -13,7 +13,7 @@
 automake.VERSION         =1.19
 automake.BASE_VERSION    =1.19
 automake.ARCHIVE_FILE    =automake-$(automake.VERSION).tar.xz
-automake.ARCHIVE_URL     =http://ftpmirror.gnu.org/automake/$(automake.ARCHIVE_FILE)
+automake.ARCHIVE_URL     =https://ftpmirror.gnu.org/automake/$(automake.ARCHIVE_FILE)
 automake.SOURCE_PATH     =automake-$(automake.VERSION)
 
 

@@ -18,7 +18,7 @@ vpath		%.pkg-config_file				$(DONE_PATH)
 
 pkg-config.VERSION         =0.29.2
 pkg-config.ARCHIVE_FILE    =pkg-config-$(pkg-config.VERSION).tar.gz
-pkg-config.ARCHIVE_URL     =http://pkg-config.freedesktop.org/releases/$(pkg-config.ARCHIVE_FILE)
+pkg-config.ARCHIVE_URL     =https://pkg-config.freedesktop.org/releases/$(pkg-config.ARCHIVE_FILE)
 pkg-config.SOURCE_PATH     =pkg-config-$(pkg-config.VERSION)
 
 $(eval $(call Package,pkg-config))

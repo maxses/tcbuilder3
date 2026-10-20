@@ -12,7 +12,7 @@
 
 mpfr.VERSION                   = 4.2.2
 mpfr.ARCHIVE_FILE              = mpfr-$(mpfr.VERSION).tar.xz
-mpfr.ARCHIVE_URL               = http://www.mpfr.org/mpfr-current/$(mpfr.ARCHIVE_FILE)
+mpfr.ARCHIVE_URL               = https://www.mpfr.org/mpfr-current/$(mpfr.ARCHIVE_FILE)
 mpfr.SOURCE_PATH               = mpfr-$(mpfr.VERSION)
 mpfr.SCOPE                     = local
 

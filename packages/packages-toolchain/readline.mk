@@ -10,7 +10,7 @@
 
 readline.VERSION         = readline-8.3
 readline.SCM_TOOL        = git
-readline.SCM_URL         = git://git.git.savannah.gnu.org/readline.git
+readline.SCM_URL         = https://https.git.savannah.gnu.org/git/readline.git
 readline.SOURCE_PATH     = readline-mainline
 
 $(eval $(call Package,readline))

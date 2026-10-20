@@ -12,7 +12,7 @@
 
 help2man.VERSION         =1.49.3
 help2man.ARCHIVE_FILE    =help2man-$(help2man.VERSION).tar.xz
-help2man.ARCHIVE_URL     =http://ftpmirror.gnu.org/help2man/$(help2man.ARCHIVE_FILE)
+help2man.ARCHIVE_URL     =https://ftpmirror.gnu.org/help2man/$(help2man.ARCHIVE_FILE)
 help2man.SOURCE_PATH     =help2man-$(help2man.VERSION)
 
 $(eval $(call Package,help2man))
