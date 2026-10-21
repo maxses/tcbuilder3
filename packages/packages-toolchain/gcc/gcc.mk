@@ -61,34 +61,31 @@ gcc.CONFIGUREFLAGS            += 	\
                                  --disable-bootstrap
 
 
-#------Targets----------------------------------
-
-
 gcc.init: glibc_native.issue libtool.issue linux_headers-native.issue
 gcc.cmi_configure: flex.issue gawk.issue
 
 gcc.limits_fix.hook: gcc.install gcc.cmi_make_install
-		@[ -e "$(gcc.LIMITS_PATH)/limits_org.h" ] || cp "$(gcc.LIMITS_PATH)/limits.h" "$(gcc.LIMITS_PATH)/limits_org.h"
-		@rm -f "$(gcc.LIMITS_PATH)/limits.h"
-		@cat "$(OPWD)/data/limits_header.h" >> "$(gcc.LIMITS_PATH)/limits.h"
-		@cat "$(gcc.LIMITS_PATH)/limits_org.h" >> "$(gcc.LIMITS_PATH)/limits.h"
-		@cat "$(OPWD)/data/limits_footer.h" >> "$(gcc.LIMITS_PATH)/limits.h"
+		@#[ -e "$(gcc.LIMITS_PATH)/limits_org.h" ] || cp "$(gcc.LIMITS_PATH)/limits.h" "$(gcc.LIMITS_PATH)/limits_org.h"
+		@#rm -f "$(gcc.LIMITS_PATH)/limits.h"
+		@#cat "$(OPWD)/data/limits_header.h" >> "$(gcc.LIMITS_PATH)/limits.h"
+		@#cat "$(gcc.LIMITS_PATH)/limits_org.h" >> "$(gcc.LIMITS_PATH)/limits.h"
+		@#cat "$(OPWD)/data/limits_footer.h" >> "$(gcc.LIMITS_PATH)/limits.h"
 		$(silentDone)
 
 gcc.dir_patch_org.hook: gcc.sourcetree
-		@cd $(SOURCE_PATH)/$(gcc.SOURCE_PATH); \
-		for file in \
-		$$(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h); \
-		do \
-		  cp -u $$file{,.orig}; \
-		sed -e 's@/lib\(64\)\?\(32\)\?/ld@$(HOST_PREFIX)&@g' \
-		-e 's@/usr@$(HOST_PREFIX)@g' $$file.orig > $$file; \
-		echo "#undef STANDARD_STARTFILE_PREFIX_1" >> $$file; \
-		echo "#undef STANDARD_STARTFILE_PREFIX_2" >> $$file; \
-		echo "#define STANDARD_STARTFILE_PREFIX_1 \"$(HOST_PREFIX)/lib/\"" >> $$file; \
-		echo "#define STANDARD_STARTFILE_PREFIX_2 \"\"" >> $$file; \
-		touch $$file.orig; \
-		done
+		@#cd $(SOURCE_PATH)/$(gcc.SOURCE_PATH); \
+		#for file in \
+		#$$(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h); \
+		#do \
+		#  cp -u $$file{,.orig}; \
+		#sed -e 's@/lib\(64\)\?\(32\)\?/ld@$(HOST_PREFIX)&@g' \
+		#-e 's@/usr@$(HOST_PREFIX)@g' $$file.orig > $$file; \
+		#echo "#undef STANDARD_STARTFILE_PREFIX_1" >> $$file; \
+		#echo "#undef STANDARD_STARTFILE_PREFIX_2" >> $$file; \
+		#echo "#define STANDARD_STARTFILE_PREFIX_1 \"$(HOST_PREFIX)/lib/\"" >> $$file; \
+		#echo "#define STANDARD_STARTFILE_PREFIX_2 \"\"" >> $$file; \
+		#touch $$file.orig; \
+		#done
 		$(silentDone)
 
 
@@ -105,19 +102,11 @@ gcc.cmi_make:                   libc_headers.issue
 
 #-- We need to copy libstdc++ from host to target sysroot
 gcc.issue: gcc.cmi gcc.postcheck gcc.skeleton
-	@cp $(SYSROOT_HOST)/$(HOST_PREFIX)/lib/$(TARGET)/lib/libstdc++* \
-		$(SYSROOT_TARGET)/$(TARGET_PREFIX)/lib
-	@cp $(SYSROOT_HOST)/$(HOST_PREFIX)/lib/$(TARGET)/lib/libsupc++* \
-			$(SYSROOT_TARGET)/$(TARGET_PREFIX)/lib
-	@cp $(SYSROOT_HOST)/$(HOST_PREFIX)/lib/$(TARGET)/lib/libssp* \
-			$(SYSROOT_TARGET)/$(TARGET_PREFIX)/lib
-	@### Not available for multilib e.g. stm32
-	@cp $(SYSROOT_HOST)/$(HOST_PREFIX)/lib/$(TARGET)/lib/libgcc* \
-			$(SYSROOT_TARGET)/$(TARGET_PREFIX)/lib &> /dev/null || true
 	$(done)
 
 
 #--- libstdc++ ----------------------------------
+
 
 # There are some race conditions when building libstdc++-v3 directly.
 # (binary gcc/xgcc missing).

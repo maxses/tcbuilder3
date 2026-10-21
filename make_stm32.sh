@@ -40,7 +40,7 @@ platform=stm32
 ### local_optimization: caution: generic does not work here, use empty "" instead.
 local_optimization=
 NPROC=$(nproc)
-let NPROC*=3
+let NPROC*=2
 # export MAKEFLAGS="-j${NPROC}"
 # export MAKEFLAGS="-j1"
 export MAKEFLAGS="-j${NPROC}"

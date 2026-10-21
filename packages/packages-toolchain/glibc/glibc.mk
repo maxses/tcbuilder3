@@ -9,6 +9,7 @@
 
 
 # 2.44 has some linker issues: undefined reference to `__assert_fail'
+# For ubuntu 22.04, glibc 2.41 can be used
 glibc.VERSION                  = 2.43
 glibc.ARCHIVE_FILE             = glibc-$(glibc.VERSION).tar.xz
 glibc.ARCHIVE_URL              = $(GNU_MIRROR)/glibc/$(glibc.ARCHIVE_FILE)
