@@ -17,8 +17,9 @@ gettext.SOURCE_PATH     = gettext-$(gettext.VERSION)
 
 $(eval $(call Package,gettext))
 
-
-gettext.CONFIGUREFLAGS      = $(host.CONFIGUREFLAGS)
+# --disable-c++: building libcxx uses gettext; might work, might fail
+gettext.CONFIGUREFLAGS      = $(host.CONFIGUREFLAGS) \
+			--disable-c++
 gettext.ENVIRONMENT         = $(host.ENVIRONMENT)
 gettext.DESTDIR             = $(host.DESTDIR)
 
