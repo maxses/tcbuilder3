@@ -34,8 +34,7 @@ the build/work directory is "~/tcbuilder3-<TCB-Version>".
 ./make_stm32.sh
 ```
 
-
-## Installing toolchain
+## Installing created toolchain on different host
 
 ### Prerequisite
 
@@ -51,13 +50,3 @@ tar -xjf tcbuilder3-stm32-x86_64-3.*.tbz
 cd tcb-3.*-stm32-x86_64
 ./relocate.sh
 ```
-
-### Run
-
-As default the target directory for downloads is "~/tcbuilder3-downloads" and 
-the build/work directory is "~/tcbuilder3-<TCB-Version>".
-
-```
-./make_stm32.sh
-```
-
